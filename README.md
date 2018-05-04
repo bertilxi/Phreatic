@@ -8,36 +8,34 @@ npm install --save phreatic
 yarn add phreatic
 ```
 
-
 ```Typescript
-@Injectable()
-class User {
-  public name = "my user";
+@Injectable
+export class User {
+  public name = "user pepito";
   public password;
   @Inject("HttpService") public http;
 }
 
-class Role {
-  public name = "my role";
+export class Role {
+  public name = "role pepito";
   public password;
 }
 
-@Injectable()
-class HttpService {
+@Injectable
+export class HttpService {
   public name = "http service";
   @Inject("User") public user: User;
   @Inject("Role") public role: Role;
 }
 
-doInjectable(new Role());
+createInjectable(new Role());
 
-const http: any = new HttpService();
-const user: any = new User();
+const http = get(HttpService);
+const user = get<any>("User");
 
 // Valid uses
 console.log(http.role.name);
 console.log(http.user.name);
 console.log(user.http.user.http.user.http.user.name);
 console.log(user.http.user.http.user.http.name);
-
 ```

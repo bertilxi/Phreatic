@@ -21,7 +21,7 @@ export class HttpService {
   @Inject("Role") public role: Role;
 }
 
-createInjectable(new Role(), Role);
+createInjectable(new Role());
 
 describe("Injector", () => {
   it("should inject", () => {
