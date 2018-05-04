@@ -37,7 +37,7 @@ const user: any = new User();
 // Valid uses
 console.log(http.role.name);
 console.log(http.user.name);
-console.log(u.http.user.http.user.http.user.name);
-console.log(u.http.user.http.user.http.name);
+console.log(user.http.user.http.user.http.user.name);
+console.log(user.http.user.http.user.http.name);
 
 ```
