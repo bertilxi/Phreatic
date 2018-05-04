@@ -1,8 +1,8 @@
 import "mocha";
 import { expect } from "chai";
-import { Inject, Injectable, doInjectable, get } from "../lib";
+import { Inject, Injectable, createInjectable, get } from "../lib";
 
-@Injectable()
+@Injectable
 export class User {
   public name = "user pepito";
   public password;
@@ -14,14 +14,14 @@ export class Role {
   public password;
 }
 
-@Injectable()
+@Injectable
 export class HttpService {
   public name = "http service";
   @Inject("User") public user: User;
   @Inject("Role") public role: Role;
 }
 
-doInjectable(new Role());
+createInjectable(new Role());
 
 describe("Injector", () => {
   it("should inject", () => {

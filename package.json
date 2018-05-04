@@ -1,6 +1,6 @@
 {
   "name": "phreatic",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "Fernando Berti <bertilxi@gmail.com>",
   "description": "Simple dependency injection",
   "main": "./lib/index.js",

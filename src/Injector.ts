@@ -1,18 +1,27 @@
 import { store } from "./Store";
+import { eventBus } from "./EventBus";
 
-const injectables = {};
-store.set("injectables", injectables);
+const classes = {};
+const instances = {};
+
+store.set("classes", classes);
+store.set("instances", instances);
 
 export interface Constructor<T> {
   new (...args: T[]): T;
 }
 
 export function resolveDependency(clazz: string) {
-  const dep = injectables[clazz];
-  if (!dep) {
-    throw new Error("Undefined dependency");
+  let dependency = instances[clazz];
+  if (!dependency) {
+    dependency = classes[clazz];
+    dependency = dependency ? new dependency() : undefined;
   }
-  return dep;
+  if (!dependency) {
+    // tslint:disable-next-line:no-console
+    console.warn(`Undefined dependency ${clazz}`);
+  }
+  return dependency;
 }
 
 export function Inject(clazz: string): PropertyDecorator {
@@ -24,11 +33,16 @@ export function Inject(clazz: string): PropertyDecorator {
       enumerable: true,
       configurable: true
     });
+    eventBus.on("DI:READY", () => {
+      if (target && target.onInit && typeof target.onInit === "function") {
+        target.onInit();
+      }
+    });
   };
 }
 
 function checkNotExists(name) {
-  const exists = !!injectables[name];
+  const exists = !!instances[name] || !!classes[name];
   if (exists) {
     throw new Error(`Name ${name} is already taken, please use another.`);
   }
@@ -39,18 +53,33 @@ export function get<T>(clazz: Constructor<T> | string): T {
   return resolveDependency(className) as T;
 }
 
-export function doInjectable(instance: any, clazz?: any) {
+export function createInjectable(instance: any, clazz?: any) {
   const className = (clazz && clazz.name) || clazz || instance.constructor.name;
   if (!className || className === "Object") {
     throw new Error("Could not infer Injectable class name");
   }
-  injectables[className] = instance;
+  instances[className] = instance;
 }
 
-export function Injectable() {
-  return (target: any) => {
-    const instance = new target();
-    checkNotExists(target.name);
-    injectables[target.name] = instance;
+export function ready() {
+  eventBus.emit("DI:READY");
+}
+
+export interface OnInit {
+  onInit: () => void;
+}
+
+export function Injectable<T>(target: Constructor<T>) {
+  checkNotExists(target.name);
+  classes[target.name] = target;
+  return target;
+}
+
+export function Singleton<T>(target: Constructor<T>) {
+  Injectable(target);
+  const f: any = () => {
+    return get(target.name);
   };
+  Object.defineProperty(f, "name", { value: target.name });
+  return f;
 }
