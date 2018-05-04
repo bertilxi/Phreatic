@@ -11,24 +11,24 @@ export interface Constructor<T> {
   new (...args: T[]): T;
 }
 
-export function resolveDependency(clazz: string) {
-  let dependency = instances[clazz];
-  if (!dependency) {
-    dependency = classes[clazz];
-    dependency = dependency ? new dependency() : undefined;
+export function resolveDependency(clazz: string, type = "") {
+  if (type === "singleton") {
+    return instances[clazz];
+  } else {
+    const ClazzConstructor = classes[clazz];
+    try {
+      return new ClazzConstructor();
+    } catch (e) {
+      console.error(`Not singleton or defined Injectable ${clazz}`);
+    }
   }
-  if (!dependency) {
-    // tslint:disable-next-line:no-console
-    console.warn(`Undefined dependency ${clazz}`);
-  }
-  return dependency;
 }
 
 export function Inject(clazz: string): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     Object.defineProperty(target, propertyKey, {
       get: () => {
-        return resolveDependency(clazz);
+        return resolveDependency(clazz, target.type);
       },
       enumerable: true,
       configurable: true
@@ -58,7 +58,11 @@ export function createInjectable(instance: any, clazz?: any) {
   if (!className || className === "Object") {
     throw new Error("Could not infer Injectable class name");
   }
-  instances[className] = instance;
+  const fake: any = () => {
+    return instance;
+  };
+  Object.defineProperty(fake, "name", { value: className });
+  Injectable(fake);
 }
 
 export function ready() {
@@ -72,13 +76,15 @@ export interface OnInit {
 export function Injectable<T>(target: Constructor<T>) {
   checkNotExists(target.name);
   classes[target.name] = target;
+  instances[target.name] = instances[target.name] || new target();
   return target;
 }
 
 export function Singleton<T>(target: Constructor<T>) {
+  target.prototype._type = "singleton";
   Injectable(target);
   const f: any = () => {
-    return get(target.name);
+    return instances[target.name];
   };
   Object.defineProperty(f, "name", { value: target.name });
   return f;

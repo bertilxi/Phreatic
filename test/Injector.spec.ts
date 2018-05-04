@@ -1,6 +1,6 @@
 import "mocha";
 import { expect } from "chai";
-import { Inject, Injectable, createInjectable, get } from "../lib";
+import { Inject, Injectable, get, createInjectable } from "../lib";
 
 @Injectable
 export class User {
@@ -21,7 +21,7 @@ export class HttpService {
   @Inject("Role") public role: Role;
 }
 
-createInjectable(new Role());
+createInjectable(new Role(), Role);
 
 describe("Injector", () => {
   it("should inject", () => {
