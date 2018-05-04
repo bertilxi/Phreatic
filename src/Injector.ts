@@ -3,6 +3,10 @@ import { store } from "./Store";
 const injectables = {};
 store.set("injectables", injectables);
 
+export interface Constructor<T> {
+  new (...args: T[]): T;
+}
+
 export function resolveDependency(clazz: string) {
   const dep = injectables[clazz];
   if (!dep) {
@@ -28,6 +32,11 @@ function checkNotExists(name) {
   if (exists) {
     throw new Error(`Name ${name} is already taken, please use another.`);
   }
+}
+
+export function get<T>(clazz: Constructor<T> | string): T {
+  const className: string = (clazz && (clazz as any).name) || clazz;
+  return resolveDependency(className) as T;
 }
 
 export function doInjectable(instance: any, clazz?: any) {

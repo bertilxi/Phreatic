@@ -1,43 +1,36 @@
 import "mocha";
-
 import { expect } from "chai";
+import { Inject, Injectable, doInjectable, get } from "../lib";
 
-import { Inject, Injectable, doInjectable } from "../lib";
+@Injectable()
+export class User {
+  public name = "user pepito";
+  public password;
+  @Inject("HttpService") public http;
+}
+
+export class Role {
+  public name = "role pepito";
+  public password;
+}
+
+@Injectable()
+export class HttpService {
+  public name = "http service";
+  @Inject("User") public user: User;
+  @Inject("Role") public role: Role;
+}
+
+doInjectable(new Role());
 
 describe("Injector", () => {
   it("should inject", () => {
-    @Injectable()
-    class User {
-      public name = "user pepito";
-      public password;
-      @Inject("HttpService") public http;
-    }
-
-    class Role {
-      public name = "role pepito";
-      public password;
-    }
-
-    @Injectable()
-    class HttpService {
-      public name = "http service";
-      @Inject("User") public user: User;
-      @Inject("Role") public role: Role;
-    }
-
-    doInjectable(new Role());
-
-    const http: any = new HttpService();
-    const u: any = new User();
+    const http = get(HttpService);
+    const user = get<any>("User");
 
     expect(http.role.name).to.equal("role pepito");
     expect(http.user.name).to.equal("user pepito");
-    expect(u.http.user.http.user.http.user.name).to.equal("user pepito");
-    expect(u.http.user.http.user.http.name).to.equal("http service");
+    expect(user.http.user.http.user.http.user.name).to.equal("user pepito");
+    expect(user.http.user.http.user.http.name).to.equal("http service");
   });
 });
-
-console.log(http.role.name);
-console.log(http.user.name);
-console.log(u.http.user.http.user.http.user.name);
-console.log(u.http.user.http.user.http.name);
