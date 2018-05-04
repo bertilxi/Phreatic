@@ -34,6 +34,9 @@ createInjectable(new Role());
 
 const http = get(HttpService);
 const user = get<any>("User");
+// the same as
+// const http = new HttpService();
+// const user = new User();
 
 // Valid uses
 console.log(http.role.name);
