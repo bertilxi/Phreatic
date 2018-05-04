@@ -9,6 +9,8 @@ yarn add phreatic
 ```
 
 ```Typescript
+import { Inject, Injectable, get, createInjectable } from "phreatic";
+
 @Injectable
 export class User {
   public name = "user pepito";
