@@ -36,3 +36,8 @@ describe("Injector", () => {
     expect(u.http.user.http.user.http.name).to.equal("http service");
   });
 });
+
+console.log(http.role.name);
+console.log(http.user.name);
+console.log(u.http.user.http.user.http.user.name);
+console.log(u.http.user.http.user.http.name);
