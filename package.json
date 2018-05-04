@@ -2,9 +2,21 @@
   "name": "phreatic",
   "version": "0.1.1",
   "author": "Fernando Berti <bertilxi@gmail.com>",
-  "description": "",
+  "description": "Simple dependency injection",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "license": "MIT",
+  "homepage": "https://github.com/bertilxi/Phreatic",
+  "bugs": "https://github.com/bertilxi/Phreatic/issues",
+  "engines": {
+    "node": ">=8.9.1 <9.0.0",
+    "yarn": ">=1.3.2 <2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bertilxi/Phreatic.git"
+  },
+  "keywords": ["DI", "dependency injection", "simple", "circular dependency"],
   "scripts": {
     "prebuild": "rimraf ./lib",
     "prebuild:prod": "rimraf ./lib",
@@ -14,7 +26,6 @@
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --project tsconfig.json --fix"
   },
-  "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.1.3",
     "@types/mocha": "^5.2.0",
