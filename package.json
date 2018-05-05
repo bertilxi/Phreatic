@@ -1,6 +1,6 @@
 {
   "name": "phreatic",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "author": "Fernando Berti <bertilxi@gmail.com>",
   "description": "Simple dependency injection",
   "main": "./lib/index.js",
@@ -9,8 +9,8 @@
   "homepage": "https://github.com/bertilxi/Phreatic",
   "bugs": "https://github.com/bertilxi/Phreatic/issues",
   "engines": {
-    "node": ">=8.9.1 <9.0.0",
-    "yarn": ">=1.3.2 <2.0.0"
+    "node": ">=8.9.1",
+    "yarn": ">=1.3.2"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "prebuild:prod": "rimraf ./lib",
     "build": "webpack",
     "build:prod": "webpack -p",
-    "test": "mocha -r ts-node/register ./test/**/*.spec.ts",
+    "test": "cd ./test && mocha -r ts-node/register ./**/**/*.spec.ts",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "tslint --project tsconfig.json --fix"
   },
@@ -44,6 +44,7 @@
     "tslint-immutable": "^4.5.4",
     "typescript": "^2.8.3",
     "webpack": "^4.7.0",
-    "webpack-cli": "^2.1.2"
+    "webpack-cli": "^2.1.2",
+    "webpack-merge": "^4.1.2"
   }
 }

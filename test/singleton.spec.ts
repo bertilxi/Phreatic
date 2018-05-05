@@ -1,24 +1,29 @@
 import "mocha";
+
 import { expect } from "chai";
-import { Singleton, Injectable, Inject } from "../lib";
 
-@Injectable
-export class A {
-  public name = "Something";
-}
-
-@Singleton
-export class B {
-  @Inject("A") public a: A;
-}
-
-@Singleton
-export class C {
-  @Inject("A") public a: A;
-}
+import { clearContainer, Inject, Injectable, Singleton } from "../lib";
 
 describe("Singleton", () => {
-  it("should be equal", () => {
+  beforeEach(() => {
+    clearContainer();
+  });
+  it("Should be different", () => {
+    @Injectable
+    class A {
+      public name = "Something";
+    }
+
+    @Singleton
+    class B {
+      @Inject("A") public a: A;
+    }
+
+    @Singleton
+    class C {
+      @Inject("A") public a: A;
+    }
+
     const aa = new A();
     const bb = new B();
     const cc = new C();
@@ -32,5 +37,27 @@ describe("Singleton", () => {
     expect(aa).to.not.equal(a2);
     expect(bb).to.equal(b2);
     expect(cc).to.equal(c2);
+  });
+  it("Should be equal", () => {
+    @Singleton
+    class HttpService {
+      public name = "http service";
+    }
+
+    @Injectable
+    class User {
+      public name = "my user";
+      @Inject("HttpService") public http;
+    }
+
+    class Role {
+      public name = "my role";
+      @Inject("HttpService") public http;
+    }
+
+    const user = new User();
+    const role = new Role();
+
+    expect(user.http).to.equal(role.http);
   });
 });

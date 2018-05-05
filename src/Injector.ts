@@ -1,34 +1,44 @@
-import { store } from "./Store";
 import { eventBus } from "./EventBus";
 
-const classes = {};
-const instances = {};
-
-store.set("classes", classes);
-store.set("instances", instances);
+let classes = {};
+let instances = {};
 
 export interface Constructor<T> {
   new (...args: T[]): T;
 }
 
-export function resolveDependency(clazz: string, type = "") {
-  if (type === "singleton") {
+export type ClassLike<T> = Constructor<T> | string;
+
+function resolveDependency(clazz: string) {
+  const ClazzConstructor = classes[clazz];
+  if (ClazzConstructor.prototype._type === "singleton" && instances[clazz]) {
     return instances[clazz];
-  } else {
-    const ClazzConstructor = classes[clazz];
-    try {
-      return new ClazzConstructor();
-    } catch (e) {
-      console.error(`Not singleton or defined Injectable ${clazz}`);
-    }
+  }
+  try {
+    return new ClazzConstructor();
+  } catch (e) {
+    // tslint:disable-next-line:no-console
+    console.error(`No singleton or defined Injectable ${clazz}`);
   }
 }
 
-export function Inject(clazz: string): PropertyDecorator {
+function checkNotExists(name) {
+  const exists = !!instances[name] || !!classes[name];
+  if (exists) {
+    throw new Error(`Name ${name} is already taken, please use another.`);
+  }
+}
+
+export function clearContainer() {
+  classes = {};
+  instances = {};
+}
+
+export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     Object.defineProperty(target, propertyKey, {
       get: () => {
-        return resolveDependency(clazz, target.type);
+        return get(clazz);
       },
       enumerable: true,
       configurable: true
@@ -41,20 +51,14 @@ export function Inject(clazz: string): PropertyDecorator {
   };
 }
 
-function checkNotExists(name) {
-  const exists = !!instances[name] || !!classes[name];
-  if (exists) {
-    throw new Error(`Name ${name} is already taken, please use another.`);
-  }
-}
-
-export function get<T>(clazz: Constructor<T> | string): T {
+export function get<T>(clazz: ClassLike<T>): T {
   const className: string = (clazz && (clazz as any).name) || clazz;
   return resolveDependency(className) as T;
 }
 
-export function createInjectable(instance: any, clazz?: any) {
-  const className = (clazz && clazz.name) || clazz || instance.constructor.name;
+export function createInjectable<T>(instance: any, clazz?: ClassLike<T>) {
+  const className =
+    (clazz && (clazz as any).name) || clazz || instance.constructor.name;
   if (!className || className === "Object") {
     throw new Error("Could not infer Injectable class name");
   }
@@ -74,9 +78,12 @@ export interface OnInit {
 }
 
 export function Injectable<T>(target: Constructor<T>) {
-  checkNotExists(target.name);
-  classes[target.name] = target;
-  instances[target.name] = instances[target.name] || new target();
+  const name = target.name;
+  checkNotExists(name);
+  if (target.prototype._type === "singleton") {
+    instances[name] = instances[name] || new target();
+  }
+  classes[name] = target;
   return target;
 }
 

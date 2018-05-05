@@ -7,11 +7,11 @@
     "declarationDir": "../lib",
     "sourceMap": true,
     "module": "commonjs",
+    "noUnusedLocals": false,
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "removeComments": true,
-    "noUnusedLocals": true,
     "moduleResolution": "node",
     "inlineSources": false,
     "types": ["node"]

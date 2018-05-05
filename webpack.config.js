@@ -1,54 +1,42 @@
 const path = require("path");
+const merge = require("webpack-merge");
 
-const serverConfig = {
-  target: "node",
-  entry: "./src/index.ts",
-  devtool: "inline-source-map",
+const common = {
   mode: "development",
+  entry: "./src/index.ts",
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/
+      }
+    ]
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"]
+  },
+  output: {
+    path: path.resolve(__dirname, "lib")
+  }
+};
+
+const serverConfig = merge(common, {
+  target: "node",
   node: {
     __filename: true,
     __dirname: true
   },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/
-      }
-    ]
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"]
-  },
   output: {
     filename: "index.js",
-    path: path.resolve(__dirname, "lib"),
     libraryTarget: "commonjs2"
   }
-};
+});
 
-const clientConfig = {
-  target: "web",
-  entry: "./src/index.ts",
-  devtool: "inline-source-map",
-  mode: "development",
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/
-      }
-    ]
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"]
-  },
+const clientConfig = merge(common, {
   output: {
-    filename: "client.js",
-    path: path.resolve(__dirname, "lib")
+    filename: "client.js"
   }
-};
+});
 
 module.exports = [serverConfig, clientConfig];
