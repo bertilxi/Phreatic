@@ -40,9 +40,11 @@ yarn add phreatic
 
 ### Caveats
 
-* We do not deal with the circular dependencies made by **you and your imports**. _Please avoid doing the following kind of imports A => B => C => A_. Just use `@Inject("className")`.
+* We do not deal with the circular dependencies made by **you and your imports**. _Please avoid doing the following kind of imports `A => B => C => A`_. Just use `@Inject("className")`.
 * For runtime/complexity reasons, **there is no constructor injection**.
 * Because the system that use the Injector could have a complex bussiness logic (dealing with asynchronicity and whatnot), there is an `OnInit` interface (inspired by angular implementation) to implement an `onInit()` callback in any Injectable, to run the code when all dependencies are ready to be resolved. Followed by a `ready()` callback to run when you know that your system is ready to do the dependency resolution, usually the bootstraping or init, after importing everything you need.
+
+### Example
 
 ```Typescript
 import { Inject, Injectable, get, createInjectable } from "phreatic";
@@ -79,4 +81,19 @@ console.log(http.role.name);
 console.log(http.user.name);
 console.log(user.http.user.http.user.http.user.name);
 console.log(user.http.user.http.user.http.name);
+```
+
+### Development
+
+Just the usual.
+
+```Bash
+# Install deps
+yarn
+# Change the code
+# Build it
+yarn build
+# Test it
+yarn test
+# submit your Pull Request or Open an issue
 ```
