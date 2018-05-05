@@ -1,6 +1,6 @@
 **WARNING: this is a WIP**
 
-# Phreatic Dependency Injector
+![Phreatic Dependency Injector](logo.png?raw=true "Phreatic Dependency Injector")
 
 In many frameworks across languages, exists the implementation of this well known design pattern, like Spring MVC, Angular, .NET, etc.
 
