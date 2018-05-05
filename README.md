@@ -34,7 +34,7 @@ _**In a nutshell**: i need it, i do not found one, i made it._
 
 * We do not deal with the circular dependencies made by **you and your imports**. _Please avoid doing the following kind of imports A => B => C => A_. Just use `@Inject("className")`.
 * For runtime/complexity reasons, **there is no constructor injection**.
-* Because the system that use the Injector could have a complex bussiness logic (dealing with asyncronicity and whatnot), there is an **OnInit** interface (inspired by angular implementation) to implement an **onInit()** callback in any Injectable, to run the code when all dependencies are ready to be resolved. Followed by a **ready()** callback to run when you know that your system is ready to do the dependency resolution, usually the bootstraping or init, after importing everything you need.
+* Because the system that use the Injector could have a complex bussiness logic (dealing with asynchronicity and whatnot), there is an **OnInit** interface (inspired by angular implementation) to implement an **onInit()** callback in any Injectable, to run the code when all dependencies are ready to be resolved. Followed by a **ready()** callback to run when you know that your system is ready to do the dependency resolution, usually the bootstraping or init, after importing everything you need.
 
 ```Bash
 npm install --save phreatic
