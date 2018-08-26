@@ -1,6 +1,6 @@
 {
   "name": "phreatic",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "author": "Fernando Berti <bertilxi@gmail.com>",
   "description": "Simple dependency injection",
   "main": "./lib/index.js",
@@ -16,7 +16,12 @@
     "type": "git",
     "url": "https://github.com/bertilxi/Phreatic.git"
   },
-  "keywords": ["DI", "dependency injection", "simple", "circular dependency"],
+  "keywords": [
+    "DI",
+    "dependency injection",
+    "simple",
+    "circular dependency"
+  ],
   "scripts": {
     "prebuild": "rimraf ./lib",
     "prebuild:prod": "rimraf ./lib",
@@ -27,23 +32,26 @@
     "lint:fix": "tslint --project tsconfig.json --fix"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.3",
-    "@types/mocha": "^5.2.0",
-    "@types/node": "^10.0.3",
-    "@types/sinon": "^4.3.1",
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.2",
+    "@types/sinon": "^5.0.1",
     "chai": "^4.1.2",
-    "mocha": "^5.1.1",
-    "prettier": "^1.12.1",
+    "mocha": "^5.2.0",
+    "prettier": "^1.14.2",
     "rimraf": "^2.6.2",
-    "sinon": "^5.0.3",
-    "ts-loader": "^4.2.0",
-    "ts-node": "^6.0.2",
-    "tslint": "^5.10.0",
-    "tslint-config-prettier": "^1.12.0",
-    "tslint-immutable": "^4.5.4",
-    "typescript": "^2.8.3",
-    "webpack": "^4.7.0",
-    "webpack-cli": "^2.1.2",
-    "webpack-merge": "^4.1.2"
+    "sinon": "^6.1.5",
+    "ts-loader": "^4.5.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-immutable": "^4.7.0",
+    "typescript": "^3.0.1",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.12"
   }
 }

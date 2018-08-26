@@ -1,13 +1,30 @@
+import "reflect-metadata";
+
 import { eventBus } from "./EventBus";
 
 let classes = {};
 let instances = {};
 
 export interface Constructor<T> {
-  new (...args: T[]): T;
+  new (...args: any[]): T;
 }
 
 export type ClassLike<T> = Constructor<T> | string;
+
+const resolveConstructor = target => {
+  const params = Reflect.getMetadata("design:paramtypes", target) || [];
+
+  const injectedArgs = params.map(param => {
+    if (!param || !param.name) {
+      throw new Error(
+        `the injected class in ${target.name} constructor is not defined`
+      );
+    }
+    return get(param.name);
+  });
+
+  return new target(...injectedArgs);
+};
 
 function resolveDependency(clazz: string) {
   const ClazzConstructor = classes[clazz];
@@ -15,7 +32,7 @@ function resolveDependency(clazz: string) {
     return instances[clazz];
   }
   try {
-    return new ClazzConstructor();
+    return resolveConstructor(ClazzConstructor);
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.error(`No singleton or defined Injectable ${clazz}`);
@@ -37,9 +54,7 @@ export function clearContainer() {
 export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     Object.defineProperty(target, propertyKey, {
-      get: () => {
-        return get(clazz);
-      },
+      get: () => get(clazz),
       enumerable: true,
       configurable: true
     });
@@ -81,7 +96,7 @@ export function Injectable<T>(target: Constructor<T>) {
   const name = target.name;
   checkNotExists(name);
   if (target.prototype._type === "singleton") {
-    instances[name] = instances[name] || new target();
+    instances[name] = instances[name] || resolveConstructor(target);
   }
   classes[name] = target;
   return target;

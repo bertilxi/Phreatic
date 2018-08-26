@@ -6,8 +6,6 @@ In many frameworks across languages, exists the implementation of this well know
 
 Well, the idea of this was not to create just another IoC based dependency injector. The main motivation was the lack of a DI that resolves circular dependencies without messing too much with runtime, reflection, or overcomplicating the solution.
 
-_**In a nutshell**: i need it, i do not found one, i made it._
-
 ### Installation
 
 ```Bash
@@ -18,31 +16,29 @@ yarn add phreatic
 
 ### Objectives
 
-* Be Awesome.
-* Be super simple. No, really, simple or nothing.
-* Well tested. Dependency Injection is the base of well a architectured system.
+- Be Awesome.
+- Be super simple.
+- Well tested. Dependency Injection is the base of well a architectured system.
 
 ### Inspiration
 
-* Spring framework
-* Angular
-* InversifyJS
-* typescript-ioc
+- Spring framework
+- Angular
+- InversifyJS
+- typescript-ioc
 
 ### Features
 
-* Solves circular dependencies.
-* Zero dependencies.
-* Isomorphic/Universal.
-* Inspired by **KISS** and **SOLID** principles.
-* Lazy dependency resolution.
-* Lightweigth **(~1kb GZIPPED)**.
+- Solves circular dependencies.
+- Zero dependencies.
+- Isomorphic/Universal.
+- Inspired by **KISS** and **SOLID** principles.
+- Lazy dependency resolution.
 
 ### Caveats
 
-* We do not deal with the circular dependencies made by **you and your imports**. _Please avoid doing the following kind of imports `A => B => C => A`_. Just use `@Inject("className")`.
-* For runtime/complexity reasons, **there is no constructor injection**.
-* Because the system that use the Injector could have a complex bussiness logic (dealing with asynchronicity and whatnot), there is an `OnInit` interface (inspired by angular implementation) to implement an `onInit()` callback in any Injectable, to run the code when all dependencies are ready to be resolved. Followed by a `ready()` callback to run when you know that your system is ready to do the dependency resolution, usually the bootstraping or init, after importing everything you need.
+- We do not deal with the circular dependencies made by **you and your imports**. _Please avoid doing the following kind of imports `A => B => C => A`_. Just use `@Inject("className")`.
+- Because the system that use the Injector could have a complex bussiness logic (dealing with asynchronicity and whatnot), there is an `OnInit` interface (inspired by angular implementation) to implement an `onInit()` callback in any Injectable, to run the code when all dependencies are ready to be resolved. Followed by a `ready()` callback to run when you know that your system is ready to do the dependency resolution, usually the bootstraping or init, after importing everything you need.
 
 ### Example
 
