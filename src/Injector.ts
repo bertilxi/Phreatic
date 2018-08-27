@@ -1,15 +1,10 @@
-import "reflect-metadata";
-
-import { eventBus } from "./EventBus";
-
 let classes = {};
 let instances = {};
 
+export type ClassLike<T> = Constructor<T> | string;
 export interface Constructor<T> {
   new (...args: any[]): T;
 }
-
-export type ClassLike<T> = Constructor<T> | string;
 
 const resolveConstructor = target => {
   const params = Reflect.getMetadata("design:paramtypes", target) || [];
@@ -20,6 +15,7 @@ const resolveConstructor = target => {
         `the injected class in ${target.name} constructor is not defined`
       );
     }
+
     return get(param.name);
   });
 
@@ -28,14 +24,15 @@ const resolveConstructor = target => {
 
 function resolveDependency(clazz: string) {
   const ClazzConstructor = classes[clazz];
-  if (ClazzConstructor.prototype._type === "singleton" && instances[clazz]) {
-    return instances[clazz];
-  }
+  const isSingleton =
+    ClazzConstructor.prototype._type === "singleton" && instances[clazz];
   try {
-    return resolveConstructor(ClazzConstructor);
+    return isSingleton
+      ? instances[clazz]
+      : resolveConstructor(ClazzConstructor);
   } catch (e) {
     // tslint:disable-next-line:no-console
-    console.error(`No singleton or defined Injectable ${clazz}`);
+    console.error(`No Singleton or Injectable : ${clazz}`);
   }
 }
 
@@ -58,11 +55,6 @@ export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
       enumerable: true,
       configurable: true
     });
-    eventBus.on("DI:READY", () => {
-      if (target && target.onInit && typeof target.onInit === "function") {
-        target.onInit();
-      }
-    });
   };
 }
 
@@ -84,30 +76,19 @@ export function createInjectable<T>(instance: any, clazz?: ClassLike<T>) {
   Injectable(fake);
 }
 
-export function ready() {
-  eventBus.emit("DI:READY");
-}
-
-export interface OnInit {
-  onInit: () => void;
-}
-
 export function Injectable<T>(target: Constructor<T>) {
-  const name = target.name;
+  const { name } = target;
   checkNotExists(name);
-  if (target.prototype._type === "singleton") {
-    instances[name] = instances[name] || resolveConstructor(target);
-  }
   classes[name] = target;
+  instances[name] = instances[name] || resolveConstructor(target);
   return target;
 }
 
 export function Singleton<T>(target: Constructor<T>) {
+  const { name } = target;
   target.prototype._type = "singleton";
   Injectable(target);
-  const f: any = () => {
-    return instances[target.name];
-  };
-  Object.defineProperty(f, "name", { value: target.name });
+  const f: any = () => instances[name];
+  Object.defineProperty(f, "name", { value: name });
   return f;
 }

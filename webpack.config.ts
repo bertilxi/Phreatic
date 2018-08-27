@@ -1,4 +1,5 @@
-const path = require("path");
+import { resolve } from "path";
+import * as UglifyJsPlugin from "uglifyjs-webpack-plugin";
 
 module.exports = {
   mode: "development",
@@ -16,9 +17,20 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"]
   },
   output: {
-    path: path.resolve(__dirname, "lib"),
+    path: resolve(__dirname, "lib"),
     filename: "index.js",
     libraryTarget: "umd",
     globalObject: "this"
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
+        }
+      })
+    ]
   }
 };

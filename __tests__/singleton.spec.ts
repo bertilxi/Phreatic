@@ -1,13 +1,10 @@
-import "mocha";
-
-import { expect } from "chai";
-
-import { clearContainer, Inject, Injectable, Singleton } from "../lib";
+import { clearContainer, Inject, Injectable, Singleton } from "../src";
 
 describe("Singleton", () => {
   beforeEach(() => {
     clearContainer();
   });
+
   it("Should be different", () => {
     @Injectable
     class A {
@@ -16,12 +13,14 @@ describe("Singleton", () => {
 
     @Singleton
     class B {
-      @Inject("A") public a: A;
+      @Inject("A")
+      public a: A;
     }
 
     @Singleton
     class C {
-      @Inject("A") public a: A;
+      @Inject("A")
+      public a: A;
     }
 
     const aa = new A();
@@ -31,13 +30,14 @@ describe("Singleton", () => {
     const b2 = new B();
     const c2 = new C();
 
-    expect(bb.a).to.not.equal(aa);
-    expect(cc.a).to.not.equal(aa);
-    expect(bb.a).to.not.equal(cc.a);
-    expect(aa).to.not.equal(a2);
-    expect(bb).to.equal(b2);
-    expect(cc).to.equal(c2);
+    expect(bb.a).not.toBe(aa);
+    expect(cc.a).not.toBe(aa);
+    expect(bb.a).not.toBe(cc.a);
+    expect(aa).not.toBe(a2);
+    expect(bb).toEqual(b2);
+    expect(cc).toEqual(c2);
   });
+
   it("Should be equal", () => {
     @Singleton
     class HttpService {
@@ -47,17 +47,19 @@ describe("Singleton", () => {
     @Injectable
     class User {
       public name = "my user";
-      @Inject("HttpService") public http;
+      @Inject("HttpService")
+      public http;
     }
 
     class Role {
       public name = "my role";
-      @Inject("HttpService") public http;
+      @Inject("HttpService")
+      public http;
     }
 
     const user = new User();
     const role = new Role();
 
-    expect(user.http).to.equal(role.http);
+    expect(user.http).toEqual(role.http);
   });
 });
