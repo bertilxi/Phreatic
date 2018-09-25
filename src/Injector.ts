@@ -1,39 +1,36 @@
 let classes = {};
 let instances = {};
 
-export type ClassLike<T> = Constructor<T> | string;
 export interface Constructor<T> {
   new (...args: any[]): T;
 }
+export type ClassLike<T> = Constructor<T> | string | symbol | any;
+
+const checkDefined = (param, name) => {
+  if (!param || !param.name) {
+    throw new Error(
+      `One of the injected class in ${name} constructor is not defined`
+    );
+  }
+};
 
 const resolveConstructor = target => {
   const params = Reflect.getMetadata("design:paramtypes", target) || [];
 
   const injectedArgs = params.map(param => {
-    if (!param || !param.name) {
-      throw new Error(
-        `the injected class in ${target.name} constructor is not defined`
-      );
-    }
-
+    checkDefined(param, target.name);
     return get(param.name);
   });
 
   return new target(...injectedArgs);
 };
 
-function resolveDependency(clazz: string) {
-  const ClazzConstructor = classes[clazz];
-  const isSingleton =
-    ClazzConstructor.prototype._type === "singleton" && instances[clazz];
-  try {
-    return isSingleton
-      ? instances[clazz]
-      : resolveConstructor(ClazzConstructor);
-  } catch (e) {
-    // tslint:disable-next-line:no-console
-    console.error(`No Singleton or Injectable : ${clazz}`);
-  }
+function resolveDependency(className: string) {
+  const mClass = classes[className];
+  const singleton =
+    mClass.prototype._type === "singleton" && instances[className];
+
+  return singleton || resolveConstructor(mClass);
 }
 
 function checkNotExists(name) {
@@ -59,28 +56,25 @@ export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
 }
 
 export function get<T>(clazz: ClassLike<T>): T {
-  const className: string = (clazz && (clazz as any).name) || clazz;
+  const className: string = (clazz && clazz.name) || clazz;
   return resolveDependency(className) as T;
 }
 
 export function createInjectable<T>(instance: any, clazz?: ClassLike<T>) {
-  const className =
-    (clazz && (clazz as any).name) || clazz || instance.constructor.name;
+  const className = (clazz && clazz.name) || clazz || instance.constructor.name;
   if (!className || className === "Object") {
     throw new Error("Could not infer Injectable class name");
   }
-  const fake: any = () => {
-    return instance;
-  };
-  Object.defineProperty(fake, "name", { value: className });
-  Injectable(fake);
+  const f: any = () => instance;
+  Object.defineProperty(f, "name", { value: className });
+  Injectable(f);
 }
 
 export function Injectable<T>(target: Constructor<T>) {
   const { name } = target;
   checkNotExists(name);
   classes[name] = target;
-  instances[name] = instances[name] || resolveConstructor(target);
+  instances[name] = resolveConstructor(target);
   return target;
 }
 
