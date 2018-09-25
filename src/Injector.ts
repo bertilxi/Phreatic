@@ -4,7 +4,7 @@ let instances = {};
 export interface Constructor<T> {
   new (...args: any[]): T;
 }
-export type ClassLike<T> = Constructor<T> | string | symbol | any;
+export type ClassLike<T> = Constructor<T> | string;
 
 const checkDefined = (param, name) => {
   if (!param || !param.name) {
@@ -45,7 +45,7 @@ export function clearContainer() {
   instances = {};
 }
 
-export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
+export function Inject<T>(clazz: ClassLike<T> | string): PropertyDecorator {
   return (target: any, propertyKey: string) => {
     Object.defineProperty(target, propertyKey, {
       get: () => get(clazz),
@@ -55,13 +55,15 @@ export function Inject<T>(clazz: ClassLike<T>): PropertyDecorator {
   };
 }
 
-export function get<T>(clazz: ClassLike<T>): T {
-  const className: string = (clazz && clazz.name) || clazz;
+const getName = obj => obj && obj.name;
+
+export function get<T>(clazz: ClassLike<T> | string): T | any {
+  const className: string = getName(clazz) || clazz;
   return resolveDependency(className) as T;
 }
 
 export function createInjectable<T>(instance: any, clazz?: ClassLike<T>) {
-  const className = (clazz && clazz.name) || clazz || instance.constructor.name;
+  const className = getName(clazz) || clazz || instance.constructor.name;
   if (!className || className === "Object") {
     throw new Error("Could not infer Injectable class name");
   }

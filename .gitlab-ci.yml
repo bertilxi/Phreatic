@@ -7,14 +7,18 @@ image: node:latest
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
   paths:
-  - node_modules/
+    - node_modules/
+
+stages:
+  - build
+  - test
 
 build:
   script:
-   - npm install
-   - npm run build
+    - npm install
+    - npm run build
 
 test:
   script:
-   - npm install
-   - npm run test
+    - npm install
+    - npm run test
