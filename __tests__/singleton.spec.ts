@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { clearContainer, Inject, Injectable, Singleton } from "../src";
 
 describe("Singleton", () => {
