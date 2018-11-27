@@ -23,3 +23,4 @@ lerna-debug.log*
 *.ntvs*
 *.njsproj
 *.sln
+.rts2_cache*
