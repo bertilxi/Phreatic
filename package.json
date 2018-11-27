@@ -45,5 +45,14 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "typescript": "^3.1.6"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "./tsconfig.test.json"
+      }
+    }
   }
 }

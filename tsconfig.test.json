@@ -10,5 +10,5 @@
     "moduleResolution": "node",
     "types": ["node", "jest"]
   },
-  "include": ["**/*"]
+  "include": ["__tests__/**/*"]
 }
