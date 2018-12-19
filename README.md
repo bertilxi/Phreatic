@@ -6,6 +6,8 @@ Well, the idea of this was not to create just another IoC based dependency injec
 
 ### Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bertilxi/Phreatic.svg)](https://greenkeeper.io/)
+
 ```Bash
 npm install --save phreatic
 # OR
