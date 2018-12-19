@@ -3,13 +3,19 @@ workflow "New workflow" {
   resolves = ["Test"]
 }
 
+action "Install" {
+  uses = "actions/npm@c555744"
+  args = "install"
+}
+
 action "Build" {
   uses = "actions/npm@c555744"
-  args = "build"
+  args = "run build"
+  needs = ["Install"]
 }
 
 action "Test" {
   uses = "actions/npm@c555744"
   needs = ["Build"]
-  args = "test"
+  args = "run test"
 }
