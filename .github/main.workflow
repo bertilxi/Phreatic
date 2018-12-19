@@ -5,11 +5,11 @@ workflow "New workflow" {
 
 action "Build" {
   uses = "actions/npm@c555744"
-  runs = "build"
+  args = "build"
 }
 
 action "Test" {
   uses = "actions/npm@c555744"
   needs = ["Build"]
-  runs = "test"
+  args = "test"
 }
