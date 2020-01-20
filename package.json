@@ -34,17 +34,17 @@
     "lint:fix": "tslint --project tsconfig.json --fix"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.9",
-    "@types/node": "^11.9.0",
-    "jest": "^23.6.0",
-    "microbundle": "^0.10.0",
-    "prettier": "^1.15.2",
-    "reflect-metadata": "^0.1.12",
-    "ts-jest": "^23.10.5",
-    "ts-node": "^8.0.3",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.16.0",
-    "typescript": "^3.1.6"
+    "@types/jest": "^24.9.0",
+    "@types/node": "^13.1.8",
+    "jest": "^24.9.0",
+    "microbundle": "^0.11.0",
+    "prettier": "^1.19.1",
+    "reflect-metadata": "^0.1.13",
+    "ts-jest": "^24.3.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.7.5"
   },
   "jest": {
     "preset": "ts-jest",
