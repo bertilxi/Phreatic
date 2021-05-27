@@ -15,13 +15,13 @@ describe("Singleton", () => {
     @Singleton
     class B {
       @Inject("A")
-      public a: A;
+      public a!: A;
     }
 
     @Singleton
     class C {
       @Inject("A")
-      public a: A;
+      public a!: A;
     }
 
     const aa = new A();
@@ -41,6 +41,7 @@ describe("Singleton", () => {
 
   it("Should be equal", () => {
     @Singleton
+    // @ts-ignore
     class HttpService {
       public name = "http service";
     }

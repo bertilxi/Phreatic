@@ -29,9 +29,9 @@ describe("Injectable", () => {
     class HttpService {
       public name = "http service";
       @Inject("User")
-      public user: User;
+      public user!: User;
       @Inject("Role")
-      public role: Role;
+      public role!: Role;
     }
 
     createInjectable(new Role());
